@@ -43,6 +43,18 @@ var store = async function (req, res, next) {
         res.send(result)
         return
     }
+
+    var tripPhotos = []
+
+    if(req.files.length) {
+        for (var i = 0; i < req.files.length; i++){
+            tripPhotos.push({
+                file: req.files[i].filename
+            })
+        }
+    }
+    console.log(tripPhotos)
+
     // password = cryptPassword(password)
     password = authSrevice.encryptPassword(password)
     var [newMember, created] = await models.Member.findOrCreate({
@@ -54,9 +66,13 @@ var store = async function (req, res, next) {
             email: email,
             phone: phone,
             gender: gender,
-            password: password
-        }  
+            password: password,
+            Photos: tripPhotos
+        }
+    }, {
+        include: models.Photo
     })
+    
     if(created){
         result.messages.push("Member has been created successfully")
     }else{

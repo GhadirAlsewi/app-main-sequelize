@@ -29,11 +29,31 @@ var store = async (req, res, next) => {
         return
     }
 
+    var tripPhotos = []
+
+    if(req.files.length) {
+        for (var i = 0; i < req.files.length; i++){
+            tripPhotos.push({
+                file: req.files[i].filename
+            })
+        }
+    }
+    console.log(tripPhotos)
     var newTrip = await models.Trip.create({
         title: title,
         cost: cost,
         date: date,
+        // relationship hasMany
+        Photos: tripPhotos
+        // photos: [
+        //     {
+        //         file: 'something.jpg'
+        //     }
+        // ]
+    }, {
+        include: models.Photo
     })
+    
     response.data = newTrip
     response.massages.push('done')
     res.send(response)
