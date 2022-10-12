@@ -1,6 +1,6 @@
 var models = require('../models')
 var store = async (req, res, next) => {
-
+    console.log(req.files)
     var response = {
         succeess: true,
         massages: [],
@@ -63,7 +63,9 @@ var show = async function (req, res, next) {
     // var id = req.params.id 
     var trip = await models.Trip.findByPk(req.params.id, {
         include: [
-            models.subscription
+            // models.subscription,
+            models.Member,
+            models.Photo
         ]
     })
     if (trip) {
